@@ -24,5 +24,5 @@ jobs:
           yes-create-issues: false
 
       - name: Log new commits
-        if: steps.poll.outputs.newCommitsInSyncRepo == 'true'
+        if: steps.check.outputs.newCommitsInSyncRepo == 'true'
         run: echo "There are new commits in the sync repository."
