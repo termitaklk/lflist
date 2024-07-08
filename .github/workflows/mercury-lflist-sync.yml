@@ -21,7 +21,7 @@ jobs:
 
             **{{ message }}** [link]({{ url }})
           token: ${{ secrets.GITHUB_TOKEN }}
-          yes-create-issues: false
+          yes-create-issues: true
 
       - name: Log new commits
         if: steps.check.outputs.newCommitsInSyncRepo == 'true'
