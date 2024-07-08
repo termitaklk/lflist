@@ -20,7 +20,7 @@ jobs:
             New commit in diegofcornejo/YGOMobile-cn-ko-en:
 
             **{{ message }}** [link]({{ url }})
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_TOKEN }}
           yes-create-issues: true
 
       - name: Log new commits
