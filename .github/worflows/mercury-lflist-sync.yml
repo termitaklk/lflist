@@ -1,0 +1,28 @@
+name: mercury-lflist-sync
+
+on:
+  workflow_dispatch:
+
+jobs:
+  sync:
+    name: check-change
+    runs-on: ubuntu-latest
+    steps:
+      - uses: poll-github-repo/action@v1
+        id: check
+        with:
+          repo-to-sync: diegofcornejo/YGOMobile-cn-ko-en
+          path-to-sync: mobile/assets/data/conf/lflist.conf
+          cache-path: .sync/mercury-lflist-sync
+          tracking-issue-label: upstream-mercury-lflist
+          tracking-issue-title: "Update on {{ path }}: {{ sha-short }}"
+          tracking-issue-body: |
+            New commit in diegofcornejo/YGOMobile-cn-ko-en:
+
+            **{{ message }}** [link]({{ url }})
+          token: ${{ secrets.GITHUB_TOKEN }}
+          yes-create-issues: false
+
+      - name: Log new commits
+        if: steps.poll.outputs.newCommitsInSyncRepo == 'true'
+        run: echo "There are new commits in the sync repository."
