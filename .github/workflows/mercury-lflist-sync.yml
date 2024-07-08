@@ -11,13 +11,13 @@ jobs:
       - uses: poll-github-repo/action@v1
         id: check
         with:
-          repo-to-sync: diegofcornejo/YGOMobile-cn-ko-en
+          repo-to-sync: fallenstardust/YGOMobile-cn-ko-en
           path-to-sync: mobile/assets/data/conf/lflist.conf
           cache-path: .sync/mercury-lflist-sync
           tracking-issue-label: upstream-mercury-lflist
           tracking-issue-title: "Update on {{ path }}: {{ sha-short }}"
           tracking-issue-body: |
-            New commit in diegofcornejo/YGOMobile-cn-ko-en:
+            New commit in fallenstardust/YGOMobile-cn-ko-en:
 
             **{{ message }}** [link]({{ url }})
           token: ${{ secrets.GH_TOKEN }}
