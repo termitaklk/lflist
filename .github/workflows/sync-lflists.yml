@@ -1,0 +1,46 @@
+name: Sync lflists from evolution-assets
+
+on:
+  schedule:
+    # Daily at 07:00 UTC — one hour after evolution-assets regenerates its lists.
+    - cron: "0 7 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download lists from evolution-assets
+        run: |
+          # Files are kept under the same name they have in evolution-assets.
+          # Add one name per line to migrate more formats.
+          LISTS="
+            genesys.lflist.conf
+          "
+          for name in $LISTS; do
+            curl -fsSL \
+              "https://raw.githubusercontent.com/diangogav/evolution-assets/main/lflist/$name" \
+              -o "/tmp/$name"
+            head -n 1 "/tmp/$name" | grep -q '^#\[' || {
+              echo "Unexpected header in $name, aborting." >&2
+              exit 1
+            }
+            mv "/tmp/$name" "$name"
+          done
+
+      - name: Commit if any list changed
+        run: |
+          if [ -n "$(git status --porcelain -- '*.lflist.conf')" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -- '*.lflist.conf'
+            git commit -m "chore(lflist): sync lists from evolution-assets"
+            git push
+          else
+            echo "Lists already up to date."
+          fi
